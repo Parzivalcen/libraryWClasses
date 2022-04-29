@@ -12,29 +12,9 @@ class Book {
 // USER ITERFACE
 class UserInterface {
   static displayBooks() {
-    const storedBooks = [
-      {
-        title: "the art of war",
-        author: "Tzun Zu",
-        pages: "300",
-        isbn: "2134",
-        read: "not read",
-      },
-      {
-        title: "The psycology of Money",
-        author: "IDK",
-        pages: "366",
-        isbn: "2098",
-        read: "read",
-      },
-    ];
+    const storedBooks = [];
     const books = storedBooks;
-    let count = 0;
-    books.forEach((book) => {
-      book.isbn = count;
-      UserInterface.addBookToGrid(book);
-      count++;
-    });
+    return books;
   }
 
   static addBookToGrid(book) {
@@ -46,14 +26,11 @@ class UserInterface {
     <h2>${book.title}</h2>
     <h3>${book.author}</h3>
     <p>${book.pages} pages</p>
+    <p class="book-n">Book ID: ${book.isbn}</p>
     <button>${book.read}</button>
     <button>Remove</button>
     `;
     booksCards.appendChild(bookCard);
-  }
-
-  static displayForm() {
-    const form = document.querySelector();
   }
 }
 // LOCAL STORAGE
@@ -79,13 +56,40 @@ document.querySelector(".new-book-btn").addEventListener("click", () => {
 document.addEventListener("click", (e) => {
   console.log("user clicked", e.target);
   const form = document.querySelector(".add-Container");
-  if (e.target.classList.contains("form-space")) {
+  if (
+    e.target.classList.contains("form-space") ||
+    e.target.classList.contains("container--cards") ||
+    e.target.classList.contains("addBook")
+  ) {
     form.setAttribute("data-visible", false);
   }
 });
 
 // ADD BOOK
 document.addEventListener("DOMContentLoaded", UserInterface.displayBooks());
+
+let count = 0;
+document.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const title = document.querySelector("#btitle").value;
+  const author = document.querySelector("#bauthor").value;
+  const pages = document.querySelector("#bpages").value;
+  let read = document.querySelector("#bread");
+  if (read.checked) {
+    read = "read";
+  } else {
+    read = "not read";
+  }
+  const book = new Book(title, author, pages, read);
+  let books = UserInterface.displayBooks();
+  books.push(book);
+  books.forEach((book) => {
+    book.isbn = count;
+    UserInterface.addBookToGrid(book);
+    count++;
+  });
+  // UserInterface.addBookToGrid(book);
+});
 
 // Add new book when btn is pressed
 // document.querySelector("");
