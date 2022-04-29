@@ -32,6 +32,13 @@ class UserInterface {
     `;
     booksCards.appendChild(bookCard);
   }
+
+  // Clear Fields
+  static clearFields() {
+    const title = (document.querySelector("#btitle").value = "");
+    const author = (document.querySelector("#bauthor").value = "");
+    const pages = (document.querySelector("#bpages").value = "");
+  }
 }
 // LOCAL STORAGE
 
@@ -88,6 +95,8 @@ document.addEventListener("submit", (e) => {
     UserInterface.addBookToGrid(book);
     count++;
   });
+
+  UserInterface.clearFields();
   // UserInterface.addBookToGrid(book);
 });
 
