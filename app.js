@@ -4,7 +4,6 @@ class Book {
     this.title = title;
     this.author = author;
     this.pages = pages;
-    this.isbn = "isbn";
     this.read = read;
   }
 }
@@ -12,9 +11,8 @@ class Book {
 // USER ITERFACE
 class UserInterface {
   static displayBooks() {
-    const storedBooks = [];
-    const books = storedBooks;
-    return books;
+    const books = Store.getBooks();
+    books.forEach((book) => UserInterface.addBookToGrid(book));
   }
 
   static addBookToGrid(book) {
@@ -26,9 +24,8 @@ class UserInterface {
     <h2>${book.title}</h2>
     <h3>${book.author}</h3>
     <p>${book.pages} pages</p>
-    <p class="book-n">Book ID: ${book.isbn}</p>
-    <button>${book.read}</button>
-    <button>Remove</button>
+    <button class="read">${book.read}</button>
+    <button class="remove-btn">Remove</button>
     `;
     booksCards.appendChild(bookCard);
   }
@@ -39,8 +36,62 @@ class UserInterface {
     const author = (document.querySelector("#bauthor").value = "");
     const pages = (document.querySelector("#bpages").value = "");
   }
+  // Change read Status
+  static readStatus(el) {
+    if (el.textContent == "read") {
+      el.textContent = "not read";
+    } else {
+      el.textContent = "read";
+    }
+  }
+  // Delete a book from the display, not LS
+  static removeFromgrid(el) {
+    if (el.classList.contains("remove-btn")) {
+      el.parentElement.remove();
+    }
+  }
 }
 // LOCAL STORAGE
+class Store {
+  // Store in LS
+  static getBooks() {
+    let books;
+    if (localStorage.getItem("books") === null) {
+      books = [];
+    } else {
+      books = JSON.parse(localStorage.getItem("books"));
+    }
+    return books;
+  }
+  static addBook(book) {
+    const books = Store.getBooks();
+    books.push(book);
+    localStorage.setItem("books", JSON.stringify(books));
+  }
+  // Delete from LS
+  static deleteBookLS(title) {
+    const books = Store.getBooks();
+    books.forEach((book, index) => {
+      if (book.title == title) {
+        books.splice(index, 1);
+      }
+      localStorage.setItem("books", JSON.stringify(books));
+    });
+  }
+
+  // change read status in LS
+  static readStatus() {
+    const books = Store.getBooks();
+    books.forEach((book) => {
+      if (book.read == "read") {
+        book.read = "not read";
+      } else {
+        book.read = "read";
+      }
+      localStorage.setItem("books", JSON.stringify(books));
+    });
+  }
+}
 
 // log in with google
 
@@ -88,19 +139,27 @@ document.addEventListener("submit", (e) => {
     read = "not read";
   }
   const book = new Book(title, author, pages, read);
-  let books = UserInterface.displayBooks();
-  books.push(book);
-  books.forEach((book) => {
-    book.isbn = count;
-    UserInterface.addBookToGrid(book);
-    count++;
-  });
+
+  UserInterface.addBookToGrid(book);
+  Store.addBook(book);
 
   UserInterface.clearFields();
   // UserInterface.addBookToGrid(book);
 });
 
-// Add new book when btn is pressed
-// document.querySelector("");
-
 // REMOVE BOOK
+document.querySelector(".container--cards").addEventListener("click", (el) => {
+  UserInterface.removeFromgrid(el.target);
+
+  // Read Status
+  UserInterface.readStatus(el.target);
+  Store.readStatus();
+  // remove from Local Storage
+  if (el.target.classList.contains("remove-btn")) {
+    let title =
+      el.target.previousElementSibling.previousElementSibling
+        .previousElementSibling.previousElementSibling.previousElementSibling
+        .textContent;
+    Store.deleteBookLS(title);
+  }
+});
