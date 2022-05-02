@@ -147,19 +147,25 @@ document.addEventListener("submit", (e) => {
   // UserInterface.addBookToGrid(book);
 });
 
+// CHANGE READ STATUS
+document.querySelector(".container--cards").addEventListener("click", (el) => {
+  if (el.target.classList.contains("read")) {
+    // Change on LS
+    Store.readStatus();
+    // Change on display
+    UserInterface.readStatus(el.target);
+  }
+});
+
 // REMOVE BOOK
 document.querySelector(".container--cards").addEventListener("click", (el) => {
   UserInterface.removeFromgrid(el.target);
-
-  // Read Status
-  UserInterface.readStatus(el.target);
-  Store.readStatus();
   // remove from Local Storage
   if (el.target.classList.contains("remove-btn")) {
     let title =
       el.target.previousElementSibling.previousElementSibling
-        .previousElementSibling.previousElementSibling.previousElementSibling
-        .textContent;
+        .previousElementSibling.previousElementSibling.textContent;
+    console.log(title);
     Store.deleteBookLS(title);
   }
 });
