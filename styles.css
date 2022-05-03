@@ -151,10 +151,18 @@ utility clases
 /* ---------
 LIBRARY
 ------------- */
-.container > h1 {
+.container > .header {
   text-align: center;
   padding-top: 2rem;
   border-bottom: 1px solid grey;
+  padding-bottom: 1rem;
+}
+.log-in{
+  padding-inline: 1rem;
+}
+.container > button {
+  text-align: center;
+  
 }
 .form-space{
   display: grid;

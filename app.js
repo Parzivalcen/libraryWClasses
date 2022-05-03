@@ -165,7 +165,7 @@ document.querySelector(".container--cards").addEventListener("click", (el) => {
     let title =
       el.target.previousElementSibling.previousElementSibling
         .previousElementSibling.previousElementSibling.textContent;
-    console.log(title);
+
     Store.deleteBookLS(title);
   }
 });
