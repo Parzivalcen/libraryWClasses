@@ -5,6 +5,11 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+} from "https://www.gstatic.com/firebasejs/9.7.0/firebase-firestore.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -18,10 +23,23 @@ const firebaseConfig = {
   appId: "1:113125064764:web:00c7aa1de3fa6d96650339",
 };
 
+// display User
+class display {
+  userShow(userName) {
+    document.querySelector("#log-in").textContent = `Hi ${userName}`;
+  }
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider(app);
 const auth = getAuth();
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
+
+// add data
+
+// Pass json local storage to fireStore
 
 // LOG iN
 document.querySelector("#log-in").addEventListener("click", (e) => {
@@ -32,6 +50,7 @@ document.querySelector("#log-in").addEventListener("click", (e) => {
       const token = credential.accessToken;
       // The signed-in user info.
       const user = result.user;
+      document.querySelector("#log-in").textContent = `Hi ${user.displayName}`;
       // ...
     })
     .catch((error) => {
